@@ -1,0 +1,8 @@
+*.log
+*.key
+*.token
+.env
+auth.json
+provider-switch.settings.json
+models.private.json
+
