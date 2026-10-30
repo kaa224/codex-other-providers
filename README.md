@@ -1,40 +1,51 @@
-# Codex Desktop: OpenAI + other providers
+# Codex Desktop: OpenAI, Polza AI и OdiRouter
 
-Набор инструкций и PowerShell-скриптов для Windows, который добавляет в Codex Desktop переключение между прямым OpenAI и OpenAI-совместимым провайдером (например, Polza AI).
+PowerShell-скрипты и инструкции для переключения Codex Desktop между OpenAI и совместимыми API-провайдерами на Windows.
 
-> Это не официальный проект OpenAI. Формат конфигурации Codex может измениться. Перед установкой создаётся резервная копия `~/.codex/config.toml`.
+> Неофициальный проект. Формат конфигурации Codex может измениться. Установщики сохраняют резервную копию `~/.codex/config.toml` перед изменением.
 
-## Что получится
+## Выберите сценарий
 
-- два ярлыка на рабочем столе: **Codex - OpenAI** и **Codex - Other Provider**;
-- API-ключ хранится в пользовательской переменной среды, а не в репозитории или `config.toml`;
-- отдельный JSON-каталог моделей для стороннего провайдера;
-- журнал переключений `~/.codex/provider-switch.log`;
-- автоматический перезапуск Codex Desktop после выбора провайдера.
+- **Только Polza AI:** отдельная настройка с Polza в качестве единственного активного провайдера. Аккаунт ChatGPT для настройки не требуется. См. [инструкцию Polza-only](POLZA-ONLY-WINDOWS-RU.md).
+- **OpenAI, Polza AI и OdiRouter:** установщик OdiRouter добавляет третий профиль в общий переключатель и сохраняет активный профиль. См. [инструкцию для OdiRouter](ODIROUTER-WINDOWS-RU.md).
+- **Другой OpenAI-совместимый API:** используйте универсальный установщик `Install-CodexProviderSwitcher.ps1` с параметрами своего провайдера.
 
-## Самый простой способ
+## OdiRouter: краткий запуск
 
-Если нужен Codex Desktop **исключительно через Polza AI**, используйте отдельную инструкцию: [Codex Desktop на Windows только через Polza AI](POLZA-ONLY-WINDOWS-RU.md). Аккаунт ChatGPT для настройки провайдера не требуется.
+1. Установите Codex Desktop и запустите его хотя бы один раз.
+2. Скачайте репозиторий через **Code → Download ZIP** и распакуйте архив.
+3. Откройте PowerShell в распакованной папке и выполните:
 
-Для добавления OdiRouter третьим профилем с отдельным ярлыком используйте [инструкцию для OdiRouter](ODIROUTER-WINDOWS-RU.md). Установщик сохраняет текущий активный профиль и добавляет OpenAI, Polza AI и OdiRouter в общий переключатель.
+```powershell
+Set-ExecutionPolicy -Scope Process Bypass
+.\scripts\Install-OdiRouter.ps1
+```
 
-1. Установите и хотя бы один раз запустите Codex Desktop.
-2. Скачайте этот репозиторий: **Code → Download ZIP**, распакуйте архив.
-3. Откройте PowerShell в папке репозитория.
-4. Выполните:
+Установщик запросит API-ключ скрытым вводом, создаст каталог совместимых моделей и добавит ярлык **Codex - OdiRouter**. Ярлыки OpenAI, Polza AI и OdiRouter используют общий переключатель профилей; переключение закрывает и перезапускает Codex Desktop. Сохраните свою работу перед переключением.
+
+Если ключ пока не готов, установите профиль без запроса ключа:
+
+```powershell
+.\scripts\Install-OdiRouter.ps1 -SkipApiKeyPrompt
+```
+
+При первом запуске ярлыка OdiRouter переключатель запросит ключ и проверит его перед перезапуском приложения. По умолчанию выбирается `gpt-5.6-sol`; доступные ID моделей берутся из каталога OdiRouter.
+
+## Универсальный установщик
+
+Для произвольного OpenAI-совместимого провайдера передайте параметры API и модели:
 
 ```powershell
 Set-ExecutionPolicy -Scope Process Bypass
 .\scripts\Install-CodexProviderSwitcher.ps1 `
-  -ProviderName polza `
-  -ProviderDisplayName "Polza AI" `
-  -BaseUrl "https://polza.ai/api/v1/" `
-  -EnvKey "POLZA_API_KEY" `
-  -Model "УКАЖИТЕ_МОДЕЛЬ" `
-  -CatalogPath "C:\путь\к\models.json"
+  -ProviderName myprovider `
+  -ProviderDisplayName "My Provider" `
+  -BaseUrl "https://example.com/v1/" `
+  -EnvKey "MY_PROVIDER_API_KEY" `
+  -Model "model-name"
 ```
 
-Если каталога моделей нет, уберите параметр `-CatalogPath`. Установщик безопасно запросит API-ключ без отображения символов и не сохранит его в истории команд. После установки закройте это окно PowerShell и запускайте нужный ярлык на рабочем столе.
+Этот установщик создаёт ярлыки **Codex - OpenAI** и **Codex - My Provider**. Параметр `-CatalogPath` необязателен; при его использовании укажите путь к JSON-каталогу моделей. Ключ запрашивается скрытым вводом и сохраняется только в пользовательской переменной среды Windows.
 
 ## Документация
 

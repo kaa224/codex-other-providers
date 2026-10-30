@@ -100,6 +100,19 @@ $shortcut = $shell.CreateShortcut((Join-Path $desktop 'Codex - OdiRouter.lnk'))
 $shortcut.TargetPath = "$env:WINDIR\System32\WindowsPowerShell\v1.0\powershell.exe"
 $shortcut.Arguments = "-NoProfile -ExecutionPolicy Bypass -WindowStyle Normal -File `"$switcherTarget`" -Provider OdiRouter"
 $shortcut.WorkingDirectory = $CodexHome
+$openAiShortcutPath = Join-Path $desktop 'Codex - OpenAI.lnk'
+if (Test-Path -LiteralPath $openAiShortcutPath) {
+    $openAiShortcut = $shell.CreateShortcut($openAiShortcutPath)
+    if (-not [string]::IsNullOrWhiteSpace($openAiShortcut.IconLocation)) {
+        $shortcut.IconLocation = $openAiShortcut.IconLocation
+    }
+}
+if ([string]::IsNullOrWhiteSpace($shortcut.IconLocation)) {
+    $codexApp = Get-AppxPackage -Name 'OpenAI.Codex' -ErrorAction SilentlyContinue |
+        Where-Object { Test-Path -LiteralPath (Join-Path $_.InstallLocation 'app\ChatGPT.exe') } |
+        Select-Object -First 1
+    if ($codexApp) { $shortcut.IconLocation = Join-Path $codexApp.InstallLocation 'app\ChatGPT.exe' }
+}
 $shortcut.Description = 'Switch Codex Desktop to OdiRouter and restart it'
 $shortcut.Save()
 
