@@ -130,6 +130,7 @@ $providerBlock = @(
     ('base_url = "{0}"' -f $apiBaseUrl),
     ('env_key = "{0}"' -f $apiKeyName),
     'wire_api = "responses"',
+    'requires_openai_auth = false',
     ''
 ) -join [Environment]::NewLine
 $providerPattern = '(?ms)^\[model_providers\.polza\].*?(?=^\[|\z)'

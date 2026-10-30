@@ -14,7 +14,7 @@
 
 ## Самый простой способ
 
-Если нужен Codex Desktop **исключительно через Polza AI**, используйте отдельную инструкцию: [Codex Desktop на Windows только через Polza AI](POLZA-ONLY-WINDOWS-RU.md). Она подходит и для бесплатного аккаунта ChatGPT.
+Если нужен Codex Desktop **исключительно через Polza AI**, используйте отдельную инструкцию: [Codex Desktop на Windows только через Polza AI](POLZA-ONLY-WINDOWS-RU.md). Аккаунт ChatGPT для настройки провайдера не требуется.
 
 1. Установите и хотя бы один раз запустите Codex Desktop.
 2. Скачайте этот репозиторий: **Code → Download ZIP**, распакуйте архив.
